@@ -10,6 +10,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  late List<Task> allTasks;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    allTasks = <Task>[];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +45,33 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Text("Merhaba"),
+      body: allTasks.isNotEmpty ? ListView.builder(
+          itemCount: allTasks.length,
+          itemBuilder: (context,index){
+            var task = allTasks[index];
+            return Dismissible(
+                background: Container(
+                  color: Colors.redAccent,
+                  alignment: Alignment.center,
+                  child: Text("Silindi",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),),
+                ),
+                key: UniqueKey(),
+                direction: DismissDirection.startToEnd,
+                onDismissed: (x){
+                  setState(() {
+                    allTasks.removeAt(index);
+                  });
+                },
+                child: ListTile(
+                  title: Text(task.name),
+                  subtitle: Text(task.time.toString()),
+                ),
+            );
+          }
+      ) :
+         Center(
+           child: Text("Görev Ekle"),
+         )
     );
   }
 
@@ -59,6 +95,9 @@ class _HomePageState extends State<HomePage> {
                   DatePicker.showTimePicker(context,showSecondsColumn: false,
                       onConfirm: (time){
                         var newTask = Task.create(name: value, time: time);
+                        setState(() {
+                          allTasks.add(newTask);
+                        });
                       }
                   );
                 }
