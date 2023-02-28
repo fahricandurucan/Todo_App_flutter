@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:todo_app_flutter/models/Task.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,7 +15,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Bugün neler yapacaksın?",style: TextStyle(color: Colors.black),),
+        title: GestureDetector(
+          onTap: (){
+            addTask(context);
+          },
+          child: Text("Bugün neler yapacaksın?",style: TextStyle(color: Colors.black),),
+        ),
 
         actions: [
           IconButton(
@@ -42,8 +49,21 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(fontSize: 20),
               decoration: InputDecoration(
                   hintText: "Görev Nedir?",
-                  border: InputBorder.none,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
               ),
+              onSubmitted: (value){
+                Navigator.pop(context);
+                if(value.length>3){
+                  DatePicker.showTimePicker(context,showSecondsColumn: false,
+                      onConfirm: (time){
+                        var newTask = Task.create(name: value, time: time);
+                      }
+                  );
+                }
+
+              },
             ),
           );
         }
