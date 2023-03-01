@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:todo_app_flutter/models/Task.dart';
+import 'package:todo_app_flutter/widgets/TaskListItem.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -62,10 +63,7 @@ class _HomePageState extends State<HomePage> {
                     allTasks.removeAt(index);
                   });
                 },
-                child: ListTile(
-                  title: Text(task.name),
-                  subtitle: Text(task.time.toString()),
-                ),
+                child: TaskListItem(task: task,),
             );
           }
       ) :
@@ -82,6 +80,7 @@ class _HomePageState extends State<HomePage> {
           return Container(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: TextField(
+              autofocus: true,
               style: TextStyle(fontSize: 20),
               decoration: InputDecoration(
                   hintText: "Görev Nedir?",
