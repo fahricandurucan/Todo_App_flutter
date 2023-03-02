@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:todo_app_flutter/HomePage.dart';
+import 'package:todo_app_flutter/models/Task.dart';
 
-void main() {
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
+  await Hive.initFlutter();
+  Hive.registerAdapter(TaskAdapter());
   runApp(const MyApp());
 }
 
