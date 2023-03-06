@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:todo_app_flutter/data/LocalStorage.dart';
+import 'package:todo_app_flutter/main.dart';
 import 'package:todo_app_flutter/models/Task.dart';
 import 'package:todo_app_flutter/widgets/TaskListItem.dart';
 
@@ -13,12 +15,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   late List<Task> allTasks;
+  late LocalStorage localStorage;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    localStorage = locator<LocalStorage>();
     allTasks = <Task>[];
+    getAllTaskFromDb();
   }
 
   @override
@@ -59,8 +64,9 @@ class _HomePageState extends State<HomePage> {
                 key: UniqueKey(),
                 direction: DismissDirection.startToEnd,
                 onDismissed: (x){
-                  setState(() {
+                  setState(() async{
                     allTasks.removeAt(index);
+                    await localStorage.deleteTask(task: task);
                   });
                 },
                 child: TaskListItem(task: task,),
@@ -92,11 +98,11 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
                 if(value.length>3){
                   DatePicker.showTimePicker(context,showSecondsColumn: false,
-                      onConfirm: (time){
+                      onConfirm: (time) {
                         var newTask = Task.create(name: value, time: time);
-                        setState(() {
-                          allTasks.add(newTask);
-                        });
+                        allTasks.add(newTask);
+                        localStorage.addTask(task: newTask);
+                        setState((){});
                       }
                   );
                 }
@@ -106,5 +112,12 @@ class _HomePageState extends State<HomePage> {
           );
         }
     );
+  }
+
+  void getAllTaskFromDb() async{
+    allTasks = await localStorage.getAllTask();
+    setState(() {
+
+    });
   }
 }
