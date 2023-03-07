@@ -3,6 +3,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:todo_app_flutter/data/LocalStorage.dart';
 import 'package:todo_app_flutter/main.dart';
 import 'package:todo_app_flutter/models/Task.dart';
+import 'package:todo_app_flutter/widgets/CustomSearchDelegate.dart';
 import 'package:todo_app_flutter/widgets/TaskListItem.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +17,11 @@ class _HomePageState extends State<HomePage> {
 
   late List<Task> allTasks;
   late LocalStorage localStorage;
+
+  TextEditingController controller = TextEditingController();
+
+  bool isSearch=false;
+  var search = "";
 
   @override
   void initState() {
@@ -40,14 +46,16 @@ class _HomePageState extends State<HomePage> {
 
         actions: [
           IconButton(
-              onPressed: (){},
-              icon: Icon(Icons.search),
+            onPressed: (){
+             showSearchPart();
+            },
+            icon: Icon(Icons.search),
           ),
           IconButton(
-              onPressed: (){
-                addTask(context);
-              },
-              icon: Icon(Icons.add),
+            onPressed: (){
+              addTask(context);
+            },
+            icon: Icon(Icons.add),
           ),
         ],
       ),
@@ -119,5 +127,10 @@ class _HomePageState extends State<HomePage> {
     setState(() {
 
     });
+  }
+
+  void showSearchPart() async{
+    await showSearch(context: context, delegate: CustomSearchDelegate(allTask: allTasks)); //hazır kod scaffold a ait
+    getAllTaskFromDb();
   }
 }

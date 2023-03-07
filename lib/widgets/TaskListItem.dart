@@ -24,11 +24,11 @@ class _TaskListItemState extends State<TaskListItem> {
     // TODO: implement initState
     super.initState();
     localStorage = locator<LocalStorage>();
-    taskController.text = widget.task.name;
   }
 
   @override
   Widget build(BuildContext context) {
+    taskController.text = widget.task.name;
     return Padding(
       padding: EdgeInsets.all(8),
       child: Card(
